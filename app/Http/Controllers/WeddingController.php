@@ -43,6 +43,13 @@ class WeddingController extends Controller
             ],
         ];
 
+        $wishes = [
+            [
+                'name' => 'Salman Alfarisi',
+                'message' => 'Selamat untuk kedua mempelai! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah. Aamiin.',
+            ],
+        ];
+
         foreach (['groom', 'bride'] as $person) {
             $nameParts = preg_split('/\s+/', trim($weddingData[$person]['full_name']), 3);
             $weddingData[$person]['initials'] = collect($nameParts)
@@ -52,6 +59,6 @@ class WeddingController extends Controller
                 ->implode('');
         }
 
-        return view('wedding.index', compact('guestName', 'weddingData'));
+        return view('wedding.index', compact('guestName', 'weddingData', 'wishes'));
     }
 }

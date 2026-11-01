@@ -188,60 +188,6 @@
             }
         }, 1000);
 
-        // Fetch API for Wishes Engine (No Reload)
-        async function fetchWishes() {
-            try {
-                const response = await fetch('/api/wishes');
-                const result = await response.json();
-                const container = document.getElementById('wishes-container');
-                container.innerHTML = '';
-
-                result.data.forEach(wish => {
-                    const card = `
-                        <div class="bg-white p-4 rounded-xl shadow border border-stone-100">
-                            <h4 class="font-bold text-stone-900 text-sm">${escapeHtml(wish.name)}</h4>
-                            <p class="text-xs text-stone-500 mb-2">${new Date(wish.created_at).toLocaleDateString('id-ID')}</p>
-                            <p class="text-stone-700 text-sm">${escapeHtml(wish.message)}</p>
-                        </div>
-                    `;
-                    container.innerHTML += card;
-                });
-            } catch (error) {
-                console.error('Error fetching wishes:', error);
-            }
-        }
-
-        document.getElementById('wish-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const name = document.getElementById('wish-name').value;
-            const message = document.getElementById('wish-message').value;
-
-            try {
-                const response = await fetch('/api/wishes', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({ name, message })
-                });
-
-                if (response.ok) {
-                    document.getElementById('wish-name').value = '';
-                    document.getElementById('wish-message').value = '';
-                    fetchWishes(); // Refresh list realtime tanpa reload
-                }
-            } catch (error) {
-                console.error('Error submitting wish:', error);
-            }
-        });
-
-        function escapeHtml(text) {
-            return text.replace(/[&<>"']/g, function(m) { 
-                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]; 
-            });
-        }
-
         function openModal(src) {
             document.getElementById('modal-img').src = src;
             document.getElementById('gallery-modal').classList.remove('hidden');
@@ -252,8 +198,5 @@
             document.getElementById('gallery-modal').classList.add('hidden');
             document.getElementById('gallery-modal').classList.remove('flex');
         }
-
-        // Initial Load
-        fetchWishes();
     </script>
 @endsection
