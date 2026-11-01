@@ -14,6 +14,12 @@ class WeddingInvitationTest extends TestCase
             ->assertOk()
             ->assertSee('Salman Alfarisi')
             ->assertSee('Selamat untuk kedua mempelai!')
+            ->assertSee('wish-form')
+            ->assertSee('wishes-container')
+            ->assertSee('localStorage')
+            ->assertSee('perangkat lain')
+            ->assertSee('Simpan Perubahan')
+            ->assertSee('Hapus')
             ->assertSee('ZA')
             ->assertSee('EN')
             ->assertSee('Putra keempat dari')
@@ -26,8 +32,7 @@ class WeddingInvitationTest extends TestCase
             ->assertSee('href="#event"', false)
             ->assertSee('href="#gallery"', false)
             ->assertSee('href="#wishes"', false)
-            ->assertDontSee('wish-form')
-            ->assertDontSee('Kirim Ucapan');
+            ->assertSee('Kirim Ucapan');
     }
 
     public function test_login_dashboard_and_wish_api_routes_are_removed(): void
