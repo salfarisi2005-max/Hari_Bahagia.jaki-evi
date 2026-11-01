@@ -35,6 +35,10 @@ class ExportStaticInvitationTest extends TestCase
             $this->assertStringContainsString('/audio/pernikahan-kita.mp3', $html);
             $this->assertStringNotContainsString('csrf-token', $html);
             $this->assertStringNotContainsString('http://localhost/', $html);
+            $this->assertStringNotContainsString('Simpan Perubahan', $html);
+            $this->assertStringNotContainsString('data-action', $html);
+            $this->assertStringNotContainsString('window.confirm', $html);
+            $this->assertStringNotContainsString('Powered by Netlify', $html);
         } finally {
             File::deleteDirectory($outputDirectory);
         }

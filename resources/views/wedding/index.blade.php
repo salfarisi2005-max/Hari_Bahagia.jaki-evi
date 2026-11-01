@@ -198,8 +198,6 @@
         const wishForm = document.getElementById('wish-form');
         const wishNameInput = document.getElementById('wish-name');
         const wishMessageInput = document.getElementById('wish-message');
-        const wishSubmitButton = document.getElementById('wish-submit');
-        const wishCancelEditButton = document.getElementById('wish-cancel-edit');
         const wishStatus = document.getElementById('wish-status');
         const wishesContainer = document.getElementById('wishes-container');
         let wishes = [];
@@ -247,31 +245,11 @@
             name.className = 'text-sm font-bold text-stone-900';
             name.textContent = wish.name;
 
-            const actions = document.createElement('div');
-            actions.className = 'flex gap-2';
-
-            const editButton = document.createElement('button');
-            editButton.type = 'button';
-            editButton.dataset.action = 'edit';
-            editButton.dataset.id = wish.id;
-            editButton.className = 'rounded-md border border-stone-300 px-3 py-1 text-xs font-semibold text-stone-700 hover:bg-stone-100';
-            editButton.textContent = 'Edit';
-            editButton.setAttribute('aria-label', `Edit ucapan ${wish.name}`);
-
-            const deleteButton = document.createElement('button');
-            deleteButton.type = 'button';
-            deleteButton.dataset.action = 'delete';
-            deleteButton.dataset.id = wish.id;
-            deleteButton.className = 'rounded-md border border-red-200 px-3 py-1 text-xs font-semibold text-red-700 hover:bg-red-50';
-            deleteButton.textContent = 'Hapus';
-            deleteButton.setAttribute('aria-label', `Hapus ucapan ${wish.name}`);
-
             const message = document.createElement('p');
             message.className = 'mt-3 whitespace-pre-wrap text-sm leading-relaxed text-stone-700';
             message.textContent = wish.message;
 
-            actions.append(editButton, deleteButton);
-            header.append(name, actions);
+            header.append(name);
             card.append(header, message);
 
             return card;
@@ -289,22 +267,6 @@
             }
 
             wishes.forEach(wish => wishesContainer.append(createWishCard(wish)));
-        }
-
-        function resetWishForm() {
-            wishForm.reset();
-            delete wishForm.dataset.editingId;
-            wishSubmitButton.textContent = 'Kirim Ucapan';
-            wishCancelEditButton.hidden = true;
-        }
-
-        function startEditingWish(wish) {
-            wishNameInput.value = wish.name;
-            wishMessageInput.value = wish.message;
-            wishForm.dataset.editingId = wish.id;
-            wishSubmitButton.textContent = 'Simpan Perubahan';
-            wishCancelEditButton.hidden = false;
-            wishNameInput.focus();
         }
 
         try {
@@ -338,20 +300,11 @@
                 return;
             }
 
-            const editingId = wishForm.dataset.editingId;
-            const nextWishes = editingId
-                ? wishes.map(wish => wish.id === editingId ? { ...wish, name, message } : wish)
-                : [...wishes, {
-                    id: typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
-                    name,
-                    message,
-                }];
-
-            if (editingId && nextWishes.every(wish => wish.id !== editingId)) {
-                showWishStatus('Ucapan yang akan diedit sudah tidak tersedia.', true);
-                resetWishForm();
-                return;
-            }
+            const nextWishes = [...wishes, {
+                id: typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
+                name,
+                message,
+            }];
 
             if (!persistWishes(nextWishes)) {
                 return;
@@ -359,40 +312,9 @@
 
             wishes = nextWishes;
             renderWishes();
-            resetWishForm();
-            showWishStatus(editingId ? 'Ucapan berhasil diperbarui di browser ini.' : 'Ucapan berhasil disimpan di browser ini.');
+            wishForm.reset();
+            showWishStatus('Ucapan berhasil disimpan di browser ini.');
         });
-
-        wishesContainer.addEventListener('click', function(event) {
-            const button = event.target.closest('button[data-action]');
-            if (!button) {
-                return;
-            }
-
-            const wish = wishes.find(item => item.id === button.dataset.id);
-            if (!wish) {
-                showWishStatus('Ucapan sudah tidak tersedia.', true);
-                return;
-            }
-
-            if (button.dataset.action === 'edit') {
-                startEditingWish(wish);
-                return;
-            }
-
-            if (button.dataset.action === 'delete' && window.confirm(`Hapus ucapan dari ${wish.name}?`)) {
-                const nextWishes = wishes.filter(item => item.id !== wish.id);
-                if (!persistWishes(nextWishes)) {
-                    return;
-                }
-
-                wishes = nextWishes;
-                renderWishes();
-                showWishStatus('Ucapan berhasil dihapus dari browser ini.');
-            }
-        });
-
-        wishCancelEditButton.addEventListener('click', resetWishForm);
 
         window.addEventListener('storage', function(event) {
             if (event.key !== wishStorageKey) {

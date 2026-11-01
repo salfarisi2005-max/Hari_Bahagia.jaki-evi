@@ -21,10 +21,6 @@
                     class="rounded-lg bg-stone-900 px-5 py-3 text-sm font-semibold text-amber-200 transition hover:bg-stone-800">
                     Kirim Ucapan
                 </button>
-                <button id="wish-cancel-edit" type="button" hidden
-                    class="rounded-lg border border-stone-300 px-5 py-3 text-sm font-semibold text-stone-700 transition hover:bg-stone-100">
-                    Batal Edit
-                </button>
             </div>
             <p id="wish-status" class="mt-4 text-sm" role="status" aria-live="polite"></p>
         </form>
