@@ -5,10 +5,6 @@
             <div class="w-16 h-0.5 bg-gold-500 mx-auto"></div>
         </div>
 
-        <p class="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-            Ucapan tersimpan di browser ini saja dan tidak terlihat oleh pengunjung di perangkat lain.
-        </p>
-
         <form id="wish-form" class="mb-8 rounded-2xl border border-stone-100 bg-white p-6 shadow-xl md:p-8">
             <label for="wish-name" class="mb-2 block text-xs font-semibold uppercase text-stone-600">Nama Anda</label>
             <input id="wish-name" name="name" type="text" maxlength="100" required
