@@ -9,7 +9,7 @@
     </button>
 
     <!-- Background Music: Arti Semestinya Cinta (Lagu Pernikahan Kita) -->
-    <audio id="bg-music" loop src="{{ asset('audio/pernikahan-kita.mp3') }}"></audio>
+    <audio id="bg-music" loop src="/audio/pernikahan-kita.mp3"></audio>
 
     <!-- Cover Overlay -->
     @include('wedding.partials.cover')
@@ -56,6 +56,11 @@
 
     <!-- JavaScript Interactions -->
     <script>
+        const guestName = new URLSearchParams(window.location.search).get('to')?.trim();
+        if (guestName) {
+            document.getElementById('guest-name').textContent = guestName;
+        }
+
         const audio = document.getElementById('bg-music');
         let autoScrollFrame = null;
         let autoScrollEnabled = true;

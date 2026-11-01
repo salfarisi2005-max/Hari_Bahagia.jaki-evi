@@ -1,0 +1,6 @@
+[build]
+command = "composer install --no-interaction --prefer-dist --no-progress --no-dev && npm install --no-audit --no-fund && npm run build && php artisan app:export-static"
+publish = "dist"
+
+[build.environment]
+PHP_VERSION = "8.3"

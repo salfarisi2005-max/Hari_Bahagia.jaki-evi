@@ -12,7 +12,7 @@
 
         <div class="bg-stone-800/80 backdrop-blur-md p-6 rounded-2xl border border-gold-500/30 mb-8 shadow-2xl">
             <p class="text-xs text-stone-400 mb-2">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
-            <h2 class="text-xl font-semibold text-gold-300">{{ $guestName }}</h2>
+            <h2 id="guest-name" class="text-xl font-semibold text-gold-300">{{ $guestName }}</h2>
         </div>
 
         <button id="btn-open" onclick="openInvitation()" class="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-gradient-to-r from-gold-700 via-gold-500 to-gold-700 text-stone-900 font-medium text-sm tracking-wide shadow-lg hover:brightness-110 transition duration-300 transform hover:-translate-y-0.5">
