@@ -33,6 +33,12 @@ class ExportStaticInvitationTest extends TestCase
             $this->assertStringContainsString('new URLSearchParams(window.location.search)', $html);
             $this->assertStringContainsString("document.getElementById('guest-name').textContent = guestName;", $html);
             $this->assertStringContainsString('/audio/pernikahan-kita.mp3', $html);
+            $this->assertStringContainsString('removedDefaultWish', $html);
+            $this->assertStringContainsString('const initialWishes = [];', $html);
+            $this->assertStringNotContainsString('Selamat untuk kedua mempelai!', $html);
+            $this->assertStringContainsString('Kirim Hadiah', $html);
+            $this->assertStringContainsString('+62 856-8468-295', $html);
+            $this->assertStringContainsString('08568468295', $html);
             $this->assertStringNotContainsString('csrf-token', $html);
             $this->assertStringNotContainsString('http://localhost/', $html);
             $this->assertStringNotContainsString('Simpan Perubahan', $html);

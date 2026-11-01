@@ -13,7 +13,8 @@ class WeddingInvitationTest extends TestCase
         $this->get('/')
             ->assertOk()
             ->assertSee('Salman Alfarisi')
-            ->assertSee('Selamat untuk kedua mempelai!')
+            ->assertSee('const initialWishes = [];', false)
+            ->assertDontSee('Selamat untuk kedua mempelai!')
             ->assertSee('wish-form')
             ->assertSee('wishes-container')
             ->assertDontSee('Ucapan tersimpan di browser ini saja')
@@ -33,7 +34,13 @@ class WeddingInvitationTest extends TestCase
             ->assertSee('href="#event"', false)
             ->assertSee('href="#gallery"', false)
             ->assertSee('href="#wishes"', false)
-            ->assertSee('Kirim Ucapan');
+            ->assertSee('Kirim Ucapan')
+            ->assertSee('Kirim Hadiah')
+            ->assertSee('aria-label="Logo DANA"', false)
+            ->assertSee('+62 856-8468-295')
+            ->assertSee('08568468295', false)
+            ->assertSee('navigator.clipboard.writeText(copyDanaButton.dataset.copyText)', false)
+            ->assertSee('Salin Nomor DANA');
     }
 
     public function test_login_dashboard_and_wish_api_routes_are_removed(): void

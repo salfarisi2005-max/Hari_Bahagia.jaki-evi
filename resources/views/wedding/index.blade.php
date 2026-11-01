@@ -23,6 +23,7 @@
         @include('wedding.partials.event')
         @include('wedding.partials.gallery')
         @include('wedding.partials.wishes')
+        @include('wedding.partials.gift')
         
         <footer class="py-8 bg-stone-900 text-stone-400 text-center text-xs border-t border-stone-800">
             <p>© 2026 Salman Alfarisi. Dibuat dengan cinta untuk {{ $weddingData['groom']['short_name'] }} & {{ $weddingData['bride']['short_name'] }}.</p>
@@ -60,6 +61,17 @@
         if (guestName) {
             document.getElementById('guest-name').textContent = guestName;
         }
+
+        const copyDanaButton = document.getElementById('copy-dana-number');
+        const danaCopyStatus = document.getElementById('dana-copy-status');
+        copyDanaButton.addEventListener('click', async function() {
+            try {
+                await navigator.clipboard.writeText(copyDanaButton.dataset.copyText);
+                danaCopyStatus.textContent = 'Nomor DANA berhasil disalin.';
+            } catch (error) {
+                danaCopyStatus.textContent = 'Nomor tidak dapat disalin. Silakan salin nomor yang tertera secara manual.';
+            }
+        });
 
         const audio = document.getElementById('bg-music');
         let autoScrollFrame = null;
@@ -201,6 +213,7 @@
         const wishStatus = document.getElementById('wish-status');
         const wishesContainer = document.getElementById('wishes-container');
         let wishes = [];
+        let removedDefaultWish = false;
 
         function showWishStatus(message, isError = false) {
             wishStatus.textContent = message;
@@ -231,7 +244,16 @@
                 throw new Error('Format ucapan tersimpan tidak valid.');
             }
 
-            return storedWishes;
+            const visibleWishes = storedWishes.filter(wish => {
+                const isRemovedDefaultWish = wish.id === 'initial-0'
+                    && wish.name === 'Salman Alfarisi';
+
+                removedDefaultWish = removedDefaultWish || isRemovedDefaultWish;
+
+                return !isRemovedDefaultWish;
+            });
+
+            return visibleWishes;
         }
 
         function createWishCard(wish) {
@@ -279,6 +301,8 @@
                 wishForm.querySelectorAll('input, textarea, button').forEach(element => {
                     element.disabled = true;
                 });
+            } else if (removedDefaultWish) {
+                persistWishes(wishes);
             }
 
             renderWishes();

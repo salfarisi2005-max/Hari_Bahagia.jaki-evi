@@ -43,12 +43,7 @@ class WeddingController extends Controller
             ],
         ];
 
-        $wishes = [
-            [
-                'name' => 'Salman Alfarisi',
-                'message' => 'Selamat untuk kedua mempelai! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah. Aamiin.',
-            ],
-        ];
+        $wishes = [];
 
         foreach (['groom', 'bride'] as $person) {
             $nameParts = preg_split('/\s+/', trim($weddingData[$person]['full_name']), 3);
