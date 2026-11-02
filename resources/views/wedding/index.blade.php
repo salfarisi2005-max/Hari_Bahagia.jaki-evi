@@ -31,7 +31,7 @@
         @include('wedding.partials.gift')
         
         <footer class="py-8 bg-stone-900 text-stone-400 text-center text-xs border-t border-stone-800">
-            <p>© 2026 {{ $weddingData['groom']['short_name'] }} & {{ $weddingData['bride']['short_name'] }}. Dibuat dengan cinta.</p>
+            <p>© 2026 {{ $weddingData['groom']['short_name'] }} & {{ $weddingData['bride']['short_name'] }}. Dibuat dengan cinta oleh Salman Alfarisi.</p>
             @unless ($isStaticExport)
                 <a href="/admin/login" class="mt-3 inline-block text-[10px] text-stone-500 transition hover:text-amber-200">Admin</a>
             @endunless

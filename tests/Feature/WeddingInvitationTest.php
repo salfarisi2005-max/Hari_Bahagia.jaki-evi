@@ -28,7 +28,7 @@ class WeddingInvitationTest extends TestCase
             ->assertSee('Bapak Mirta dan Ibu Mulyati')
             ->assertSee('Putri pertama dari')
             ->assertSee('Bapak Dedi dan Ibu Anti')
-            ->assertSeeText('© 2026 Zaki & Evi Navisa. Dibuat dengan cinta.')
+            ->assertSeeText('© 2026 Zaki & Evi Navisa. Dibuat dengan cinta oleh Salman Alfarisi.')
             ->assertSee('Navigasi undangan')
             ->assertSee('href="#couple"', false)
             ->assertSee('href="#event"', false)
