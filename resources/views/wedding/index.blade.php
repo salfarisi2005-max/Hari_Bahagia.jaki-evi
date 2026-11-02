@@ -338,50 +338,50 @@
 
         if (!isStaticExport) {
             wishForm.addEventListener('submit', async function(event) {
-            event.preventDefault();
+                event.preventDefault();
 
-            const name = wishNameInput.value.trim();
-            const message = wishMessageInput.value.trim();
-            const category = wishCategoryInput.value;
+                const name = wishNameInput.value.trim();
+                const message = wishMessageInput.value.trim();
+                const category = wishCategoryInput.value;
 
-            if (!name || !message || !wishCategoryLabels.has(category)) {
-                showWishStatus('Kategori, nama, dan ucapan wajib diisi.', true);
-                return;
-            }
+                if (!name || !message || !wishCategoryLabels.has(category)) {
+                    showWishStatus('Kategori, nama, dan ucapan wajib diisi.', true);
+                    return;
+                }
 
-            try {
-                const csrfCookie = document.cookie
-                    .split('; ')
-                    .find(cookie => cookie.startsWith('XSRF-TOKEN='))
-                    ?.slice('XSRF-TOKEN='.length);
-                const response = await fetch('{{ route('wishes.store', absolute: false) }}', {
-                    method: 'POST',
-                    credentials: 'same-origin',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        ...(csrfCookie ? { 'X-XSRF-TOKEN': decodeURIComponent(csrfCookie) } : {}),
-                    },
-                    body: JSON.stringify({ category, name, message }),
+                try {
+                    const csrfCookie = document.cookie
+                        .split('; ')
+                        .find(cookie => cookie.startsWith('XSRF-TOKEN='))
+                        ?.slice('XSRF-TOKEN='.length);
+                    const response = await fetch('{{ route('wishes.store', absolute: false) }}', {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            ...(csrfCookie ? { 'X-XSRF-TOKEN': decodeURIComponent(csrfCookie) } : {}),
+                        },
+                        body: JSON.stringify({ category, name, message }),
                     });
-                }
 
-                if (!response.ok) {
-                    const result = await response.json().catch(() => ({}));
-                    const errorMessage = result.message || 'Ucapan gagal disimpan. Silakan coba lagi.';
-                    throw new Error(errorMessage);
-                }
+                    if (!response.ok) {
+                        const result = await response.json().catch(() => ({}));
+                        const errorMessage = result.message || 'Ucapan gagal disimpan. Silakan coba lagi.';
+                        throw new Error(errorMessage);
+                    }
 
-                const result = await response.json();
-                wishes.unshift(result.wish);
-                renderWishes();
-                wishForm.reset();
-                showWishStatus('Ucapan berhasil dikirim dan tersimpan.');
-            } catch (error) {
-                console.error('Ucapan tidak dapat dikirim.', error);
-                showWishStatus(error.message || 'Ucapan tidak dapat dikirim. Periksa koneksi lalu coba lagi.', true);
-            }
-        });
+                    const result = await response.json();
+                    wishes.unshift(result.wish);
+                    renderWishes();
+                    wishForm.reset();
+                    showWishStatus('Ucapan berhasil dikirim dan tersimpan.');
+                } catch (error) {
+                    console.error('Ucapan tidak dapat dikirim.', error);
+                    showWishStatus(error.message || 'Ucapan tidak dapat dikirim. Periksa koneksi lalu coba lagi.', true);
+                }
+            });
+        }
 
         function openModal(src) {
             document.getElementById('modal-img').src = src;
