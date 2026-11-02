@@ -33,7 +33,8 @@ class ExportStaticInvitationTest extends TestCase
             $this->assertFileExists($htmlPath);
             $this->assertFileExists($outputDirectory.'/audio/pernikahan-kita.mp3');
             $this->assertFileExists($outputDirectory.'/images/couple-cartoon.jpg');
-            $this->assertFileExists($outputDirectory.'/images/bride-cartoon.jpg');
+            $this->assertFileExists($outputDirectory.'/images/groom-cartoon.jpeg');
+            $this->assertFileExists($outputDirectory.'/images/bride-cartoon.jpeg');
             $this->assertFileExists($outputDirectory.'/images/dana-logo.jpg');
             $this->assertFileExists($outputDirectory.'/images/cartoon-couple-navy.jpg');
             $this->assertFileExists($outputDirectory.'/images/cartoon-couple-pink.jpg');
@@ -43,7 +44,8 @@ class ExportStaticInvitationTest extends TestCase
             $this->assertStringContainsString("document.getElementById('guest-name').textContent = guestName;", $html);
             $this->assertStringContainsString('/audio/pernikahan-kita.mp3', $html);
             $this->assertStringContainsString('/images/couple-cartoon.jpg', $html);
-            $this->assertStringContainsString('/images/bride-cartoon.jpg', $html);
+            $this->assertStringContainsString('/images/groom-cartoon.jpeg', $html);
+            $this->assertStringContainsString('/images/bride-cartoon.jpeg', $html);
             $this->assertStringContainsString('/images/dana-logo.jpg', $html);
             $this->assertStringContainsString('/images/cartoon-couple-navy.jpg', $html);
             $this->assertStringContainsString('/images/cartoon-couple-pink.jpg', $html);
