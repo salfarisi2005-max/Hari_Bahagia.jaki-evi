@@ -1,5 +1,5 @@
 <div id="wedding-cover" class="fixed inset-0 z-50 flex items-center justify-center bg-stone-900 text-white transition-opacity duration-1000">
-    <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image: url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1920&q=80')"></div>
+    <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image: url('/images/couple-cartoon.jpg')"></div>
     <div class="batik-pattern absolute inset-0 opacity-30"></div>
     <div class="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/60 to-transparent"></div>
 

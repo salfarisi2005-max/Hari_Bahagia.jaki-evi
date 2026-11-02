@@ -8,6 +8,11 @@
         <svg id="audio-icon-pause" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
     </button>
 
+    <button id="theme-toggle" type="button" aria-label="Aktifkan tema gelap" aria-pressed="false" class="fixed right-4 top-4 z-[60] flex h-11 w-11 items-center justify-center rounded-full border border-gold-500/40 bg-stone-900/85 text-gold-300 shadow-lg backdrop-blur transition hover:scale-110 focus:outline-none focus:ring-2 focus:ring-gold-300">
+        <svg id="theme-icon-moon" aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M20.2 15.1A8.5 8.5 0 0 1 8.9 3.8 8.5 8.5 0 1 0 20.2 15.1Z"/></svg>
+        <svg id="theme-icon-sun" aria-hidden="true" class="hidden h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" stroke-width="1.8"/><path stroke-linecap="round" stroke-width="1.8" d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+    </button>
+
     <!-- Background Music: Arti Semestinya Cinta (Lagu Pernikahan Kita) -->
     <audio id="bg-music" loop src="/audio/pernikahan-kita.mp3"></audio>
 
@@ -26,7 +31,10 @@
         @include('wedding.partials.gift')
         
         <footer class="py-8 bg-stone-900 text-stone-400 text-center text-xs border-t border-stone-800">
-            <p>© 2026 Salman Alfarisi. Dibuat dengan cinta untuk {{ $weddingData['groom']['short_name'] }} & {{ $weddingData['bride']['short_name'] }}.</p>
+            <p>© 2026 {{ $weddingData['groom']['short_name'] }} & {{ $weddingData['bride']['short_name'] }}. Dibuat dengan cinta.</p>
+            @unless ($isStaticExport)
+                <a href="/admin/login" class="mt-3 inline-block text-[10px] text-stone-500 transition hover:text-amber-200">Admin</a>
+            @endunless
         </footer>
 
         <nav aria-label="Navigasi undangan" class="fixed inset-x-0 bottom-0 z-30 border-t border-amber-200/20 bg-stone-900/95 px-2 pb-[env(safe-area-inset-bottom)] text-white shadow-[0_-8px_24px_rgba(0,0,0,0.18)] backdrop-blur-md md:hidden">
@@ -57,7 +65,33 @@
 
     <!-- JavaScript Interactions -->
     <script>
-        const guestName = new URLSearchParams(window.location.search).get('to')?.trim();
+        const themeToggle = document.getElementById('theme-toggle');
+        const moonIcon = document.getElementById('theme-icon-moon');
+        const sunIcon = document.getElementById('theme-icon-sun');
+
+        function updateThemeToggle() {
+            const isDark = document.documentElement.dataset.theme === 'dark';
+            themeToggle.setAttribute('aria-pressed', String(isDark));
+            themeToggle.setAttribute('aria-label', isDark ? 'Aktifkan tema terang' : 'Aktifkan tema gelap');
+            moonIcon.classList.toggle('hidden', isDark);
+            sunIcon.classList.toggle('hidden', !isDark);
+        }
+
+        themeToggle.addEventListener('click', function() {
+            const nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+            document.documentElement.dataset.theme = nextTheme;
+            updateThemeToggle();
+
+            try {
+                localStorage.setItem('wedding-theme', nextTheme);
+            } catch (error) {
+                console.error('Preferensi tema tidak dapat disimpan di browser ini.', error);
+            }
+        });
+
+        updateThemeToggle();
+
+        const guestName = new URLSearchParams(window.location.search).get('to')?.trim().slice(0, 80);
         if (guestName) {
             document.getElementById('guest-name').textContent = guestName;
         }
@@ -205,15 +239,17 @@
             }
         }, 1000);
 
-        const wishStorageKey = 'wedding-wishes-v1';
         const initialWishes = {{ Illuminate\Support\Js::from($wishes) }};
+        const isStaticExport = {{ Illuminate\Support\Js::from($isStaticExport) }};
         const wishForm = document.getElementById('wish-form');
+        const wishCategoryInput = document.getElementById('wish-category');
         const wishNameInput = document.getElementById('wish-name');
         const wishMessageInput = document.getElementById('wish-message');
         const wishStatus = document.getElementById('wish-status');
         const wishesContainer = document.getElementById('wishes-container');
+        const wishCategories = {{ Illuminate\Support\Js::from($wishCategories) }};
+        const wishCategoryLabels = new Map(Object.entries(wishCategories));
         let wishes = [];
-        let removedDefaultWish = false;
 
         function showWishStatus(message, isError = false) {
             wishStatus.textContent = message;
@@ -221,60 +257,52 @@
             wishStatus.setAttribute('role', isError ? 'alert' : 'status');
         }
 
-        function persistWishes(nextWishes) {
-            try {
-                localStorage.setItem(wishStorageKey, JSON.stringify(nextWishes));
-                return true;
-            } catch (error) {
-                showWishStatus('Ucapan tidak dapat disimpan di browser ini. Periksa pengaturan penyimpanan browser.', true);
-                return false;
-            }
-        }
+        function createWishTable(category, categoryWishes) {
+            const section = document.createElement('section');
+            section.className = 'wish-category-section overflow-hidden rounded-2xl border border-stone-100 bg-white shadow-sm';
 
-        function parseStoredWishes(value) {
-            const storedWishes = JSON.parse(value);
-            const isValid = Array.isArray(storedWishes) && storedWishes.every(wish =>
-                wish &&
-                typeof wish.id === 'string' &&
-                typeof wish.name === 'string' &&
-                typeof wish.message === 'string'
-            );
+            const heading = document.createElement('h3');
+            heading.className = 'wish-category-heading border-b border-stone-100 bg-stone-50 px-5 py-4 font-serif text-lg font-bold text-stone-900';
+            heading.textContent = `${category.label} (${categoryWishes.length})`;
 
-            if (!isValid) {
-                throw new Error('Format ucapan tersimpan tidak valid.');
-            }
+            const table = document.createElement('table');
+            table.className = 'wishes-table w-full border-collapse text-left text-sm';
 
-            const visibleWishes = storedWishes.filter(wish => {
-                const isRemovedDefaultWish = wish.id === 'initial-0'
-                    && wish.name === 'Salman Alfarisi';
+            const header = document.createElement('thead');
+            const headerRow = document.createElement('tr');
 
-                removedDefaultWish = removedDefaultWish || isRemovedDefaultWish;
-
-                return !isRemovedDefaultWish;
+            ['Nama', 'Ucapan & Doa'].forEach(label => {
+                const cell = document.createElement('th');
+                cell.className = 'px-4 py-3 font-semibold md:px-5';
+                cell.scope = 'col';
+                cell.textContent = label;
+                headerRow.append(cell);
             });
 
-            return visibleWishes;
-        }
+            header.append(headerRow);
 
-        function createWishCard(wish) {
-            const card = document.createElement('article');
-            card.className = 'rounded-xl border border-stone-100 bg-white p-5 shadow';
+            const body = document.createElement('tbody');
+            categoryWishes.forEach(wish => {
+                const row = document.createElement('tr');
+                row.className = 'wish-row border-t border-stone-100 align-top';
 
-            const header = document.createElement('div');
-            header.className = 'flex flex-wrap items-start justify-between gap-3';
+                const name = document.createElement('th');
+                name.className = 'w-1/3 break-words px-4 py-4 font-semibold text-stone-900 md:w-1/4 md:px-5';
+                name.scope = 'row';
+                name.textContent = wish.name;
 
-            const name = document.createElement('h3');
-            name.className = 'text-sm font-bold text-stone-900';
-            name.textContent = wish.name;
+                const message = document.createElement('td');
+                message.className = 'whitespace-pre-wrap break-words px-4 py-4 leading-relaxed text-stone-700 md:px-5';
+                message.textContent = wish.message;
 
-            const message = document.createElement('p');
-            message.className = 'mt-3 whitespace-pre-wrap text-sm leading-relaxed text-stone-700';
-            message.textContent = wish.message;
+                row.append(name, message);
+                body.append(row);
+            });
 
-            header.append(name);
-            card.append(header, message);
+            table.append(header, body);
+            section.append(heading, table);
 
-            return card;
+            return section;
         }
 
         function renderWishes() {
@@ -283,76 +311,75 @@
             if (wishes.length === 0) {
                 const emptyMessage = document.createElement('p');
                 emptyMessage.className = 'rounded-xl border border-stone-100 bg-white p-5 text-center text-sm text-stone-500';
-                emptyMessage.textContent = 'Belum ada ucapan. Jadilah yang pertama mengirim doa.';
+                emptyMessage.textContent = isStaticExport
+                    ? 'Ucapan tidak ditampilkan pada undangan statis.'
+                    : 'Belum ada ucapan. Jadilah yang pertama mengirim doa.';
                 wishesContainer.append(emptyMessage);
                 return;
             }
 
-            wishes.forEach(wish => wishesContainer.append(createWishCard(wish)));
-        }
+            Object.entries(wishCategories).forEach(([value, label]) => {
+                const categoryWishes = wishes.filter(wish => wish.category === value);
 
-        try {
-            const storedWishes = localStorage.getItem(wishStorageKey);
-            wishes = storedWishes === null
-                ? initialWishes.map((wish, index) => ({ ...wish, id: `initial-${index}` }))
-                : parseStoredWishes(storedWishes);
-
-            if (storedWishes === null && !persistWishes(wishes)) {
-                wishForm.querySelectorAll('input, textarea, button').forEach(element => {
-                    element.disabled = true;
-                });
-            } else if (removedDefaultWish) {
-                persistWishes(wishes);
-            }
-
-            renderWishes();
-        } catch (error) {
-            showWishStatus('Ucapan tersimpan tidak dapat dibaca. Hapus data situs untuk memulai ulang penyimpanan ucapan.', true);
-            wishForm.querySelectorAll('input, textarea, button').forEach(element => {
-                element.disabled = true;
+                if (categoryWishes.length > 0) {
+                    wishesContainer.append(createWishTable({ value, label }, categoryWishes));
+                }
             });
         }
 
-        wishForm.addEventListener('submit', function(event) {
+        try {
+            localStorage.removeItem('wedding-wishes-v1');
+            localStorage.removeItem('wedding-wishes-v2');
+        } catch (error) {
+            console.error('Ucapan lama di browser ini tidak dapat dibersihkan.', error);
+        }
+        wishes = initialWishes;
+        renderWishes();
+
+        if (!isStaticExport) {
+            wishForm.addEventListener('submit', async function(event) {
             event.preventDefault();
 
             const name = wishNameInput.value.trim();
             const message = wishMessageInput.value.trim();
+            const category = wishCategoryInput.value;
 
-            if (!name || !message) {
-                showWishStatus('Nama dan ucapan wajib diisi.', true);
-                return;
-            }
-
-            const nextWishes = [...wishes, {
-                id: typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
-                name,
-                message,
-            }];
-
-            if (!persistWishes(nextWishes)) {
-                return;
-            }
-
-            wishes = nextWishes;
-            renderWishes();
-            wishForm.reset();
-            showWishStatus('Ucapan berhasil disimpan di browser ini.');
-        });
-
-        window.addEventListener('storage', function(event) {
-            if (event.key !== wishStorageKey) {
+            if (!name || !message || !wishCategoryLabels.has(category)) {
+                showWishStatus('Kategori, nama, dan ucapan wajib diisi.', true);
                 return;
             }
 
             try {
-                wishes = event.newValue === null
-                    ? initialWishes.map((wish, index) => ({ ...wish, id: `initial-${index}` }))
-                    : parseStoredWishes(event.newValue);
+                const csrfCookie = document.cookie
+                    .split('; ')
+                    .find(cookie => cookie.startsWith('XSRF-TOKEN='))
+                    ?.slice('XSRF-TOKEN='.length);
+                const response = await fetch('{{ route('wishes.store', absolute: false) }}', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        ...(csrfCookie ? { 'X-XSRF-TOKEN': decodeURIComponent(csrfCookie) } : {}),
+                    },
+                    body: JSON.stringify({ category, name, message }),
+                    });
+                }
+
+                if (!response.ok) {
+                    const result = await response.json().catch(() => ({}));
+                    const errorMessage = result.message || 'Ucapan gagal disimpan. Silakan coba lagi.';
+                    throw new Error(errorMessage);
+                }
+
+                const result = await response.json();
+                wishes.unshift(result.wish);
                 renderWishes();
-                showWishStatus('Daftar ucapan diperbarui dari tab lain di browser ini.');
+                wishForm.reset();
+                showWishStatus('Ucapan berhasil dikirim dan tersimpan.');
             } catch (error) {
-                showWishStatus('Perubahan penyimpanan dari tab lain tidak dapat dibaca.', true);
+                console.error('Ucapan tidak dapat dikirim.', error);
+                showWishStatus(error.message || 'Ucapan tidak dapat dikirim. Periksa koneksi lalu coba lagi.', true);
             }
         });
 

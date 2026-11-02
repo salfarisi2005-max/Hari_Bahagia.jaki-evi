@@ -4,6 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Wedding of {{ $weddingData['groom']['short_name'] }} & {{ $weddingData['bride']['short_name'] }}</title>
+    <script>
+        (() => {
+            let theme = 'light';
+
+            try {
+                theme = localStorage.getItem('wedding-theme')
+                    || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            } catch (error) {
+                theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+
+            document.documentElement.dataset.theme = theme === 'dark' ? 'dark' : 'light';
+        })();
+    </script>
     
     <!-- Meta SEO -->
     <meta name="description" content="Undangan Pernikahan Digital {{ $weddingData['groom']['short_name'] }} & {{ $weddingData['bride']['short_name'] }} - 8 November 2026">
@@ -41,18 +55,6 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    <style>
-        .gold-gradient {
-            background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .bg-ornament {
-            background-image: radial-gradient(#D4AF37 0.5px, transparent 0.5px);
-            background-size: 24px 24px;
-            opacity: 0.15;
-        }
-    </style>
     @include('layouts.batik-theme')
 </head>
 <body class="batik-page bg-stone-50 text-stone-800 font-sans antialiased selection:bg-gold-500 selection:text-white overflow-x-hidden">
@@ -61,7 +63,9 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            AOS.init({ duration: 1000, once: true });
+            if (window.AOS) {
+                AOS.init({ duration: 1000, once: true });
+            }
         });
     </script>
 </body>

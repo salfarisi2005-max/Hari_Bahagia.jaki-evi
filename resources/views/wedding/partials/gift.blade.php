@@ -10,11 +10,11 @@
                 </p>
 
                 <div class="mx-auto max-w-sm rounded-2xl border border-sky-100 bg-white p-6 shadow-lg">
-                    <div class="mb-5 inline-flex items-center rounded-full bg-sky-50 px-5 py-2" aria-label="Logo DANA">
-                        <span class="font-sans text-3xl font-extrabold tracking-[-0.1em] text-[#118EEA]">DANA</span>
+                    <div class="mb-4 flex justify-center" aria-label="Logo DANA">
+                        <img src="/images/dana-logo.jpg" alt="Logo DANA" class="h-20 w-20 rounded-xl object-contain">
                     </div>
                     <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-stone-500">Nomor DANA</p>
-                    <p class="mb-5 text-xl font-bold tracking-wide text-stone-900">+62 856-8468-295</p>
+                    <p class="mb-5 text-xl font-bold tracking-wide text-stone-900">08568468295</p>
                     <button
                         id="copy-dana-number"
                         type="button"

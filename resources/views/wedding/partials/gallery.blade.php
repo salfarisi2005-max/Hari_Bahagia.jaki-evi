@@ -5,10 +5,10 @@
             <div class="w-16 h-0.5 bg-gold-500 mx-auto"></div>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4" data-aos="fade-up">
-            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=900&q=85" alt="Momen pernikahan yang hangat" onclick="openModal(this.src)" class="w-full h-48 rounded-xl object-cover shadow-md transition duration-300 hover:scale-105">
-            <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=900&q=85" alt="Dekorasi dan suasana pernikahan" onclick="openModal(this.src)" class="w-full h-48 rounded-xl object-cover shadow-md transition duration-300 hover:scale-105">
-            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=85" alt="Perayaan hari bahagia" onclick="openModal(this.src)" class="w-full h-48 rounded-xl object-cover shadow-md transition duration-300 hover:scale-105">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3" data-aos="fade-up">
+            <img src="/images/couple-cartoon.jpg" alt="Ilustrasi kartun Zaki dan Evi sebagai pasangan pengantin" onclick="openModal(this.src)" class="aspect-square w-full rounded-xl bg-white object-contain shadow-md transition duration-300 hover:scale-105">
+            <img src="/images/cartoon-couple-navy.jpg" alt="Ilustrasi kartun pasangan pengantin dengan busana biru navy" onclick="openModal(this.src)" class="aspect-square w-full rounded-xl bg-white object-contain shadow-md transition duration-300 hover:scale-105">
+            <img src="/images/cartoon-couple-pink.jpg" alt="Ilustrasi kartun pasangan pengantin dengan busana merah muda" onclick="openModal(this.src)" class="aspect-square w-full rounded-xl bg-white object-contain shadow-md transition duration-300 hover:scale-105">
         </div>
     </div>
 

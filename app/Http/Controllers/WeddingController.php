@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Guest;
+use App\Models\Wish;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
@@ -9,7 +11,11 @@ class WeddingController extends Controller
 {
     public function index(Request $request): View
     {
-        $guestName = $request->query('to', 'Tamu Undangan');
+        $requestedGuestName = $request->query('to');
+        $guestName = is_string($requestedGuestName)
+            ? mb_substr((preg_replace('/\s+/u', ' ', trim($requestedGuestName)) ?? ''), 0, 80)
+            : '';
+        $guestName = $guestName !== '' ? $guestName : 'Tamu Undangan';
 
         $weddingData = [
             'groom' => [
@@ -43,7 +49,13 @@ class WeddingController extends Controller
             ],
         ];
 
-        $wishes = [];
+        $isStaticExport = $request->attributes->get('static_export') === true;
+        $wishes = $isStaticExport
+            ? []
+            : Wish::query()
+                ->latest()
+                ->get(['category', 'name', 'message'])
+                ->toArray();
 
         foreach (['groom', 'bride'] as $person) {
             $nameParts = preg_split('/\s+/', trim($weddingData[$person]['full_name']), 3);
@@ -54,6 +66,8 @@ class WeddingController extends Controller
                 ->implode('');
         }
 
-        return view('wedding.index', compact('guestName', 'weddingData', 'wishes'));
+        $wishCategories = Guest::CATEGORIES;
+
+        return view('wedding.index', compact('guestName', 'weddingData', 'wishes', 'wishCategories', 'isStaticExport'));
     }
 }

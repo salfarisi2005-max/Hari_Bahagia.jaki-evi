@@ -10,8 +10,8 @@
         </h1>
         
         <div class="max-w-md mx-auto my-8 relative" data-aos="zoom-in">
-            <div class="aspect-[4/5] rounded-t-full overflow-hidden shadow-2xl border-4 border-stone-100">
-                <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80" alt="Foto Utama Mempelai" class="w-full h-full object-cover">
+            <div class="aspect-square overflow-hidden rounded-3xl border-4 border-stone-100 bg-white shadow-2xl">
+                <img src="/images/couple-cartoon.jpg" alt="Ilustrasi kartun Zaki dan Evi sebagai pasangan pengantin" class="h-full w-full object-contain">
             </div>
         </div>
 

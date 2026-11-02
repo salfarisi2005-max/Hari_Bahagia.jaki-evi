@@ -47,6 +47,14 @@ class ExportStaticInvitation extends Command
             return self::FAILURE;
         }
 
+        $imageDirectory = public_path('images');
+
+        if (! File::isDirectory($imageDirectory) || ! File::copyDirectory($imageDirectory, $outputDirectory.'/images')) {
+            $this->error('The public image assets could not be copied to the static site.');
+
+            return self::FAILURE;
+        }
+
         $buildDirectory = public_path('build');
 
         if (File::isDirectory($buildDirectory) && ! File::copyDirectory($buildDirectory, $outputDirectory.'/build')) {
@@ -65,7 +73,9 @@ class ExportStaticInvitation extends Command
             }
         }
 
-        $html = $weddingController->index(Request::create('/'))->render();
+        $request = Request::create('/');
+        $request->attributes->set('static_export', true);
+        $html = $weddingController->index($request)->render();
 
         if (! File::put($outputDirectory.'/index.html', $html)) {
             $this->error('The static invitation page could not be written.');
