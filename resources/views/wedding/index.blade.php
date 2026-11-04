@@ -3,7 +3,7 @@
 @section('content')
 
     <!-- Floating Audio Control -->
-    <button id="audio-control" onclick="toggleAudio()" aria-label="Putar atau jeda musik" class="fixed bottom-20 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-gold-500/30 bg-stone-900/80 text-gold-300 shadow-2xl backdrop-blur transition hover:scale-110 md:bottom-6 md:right-6">
+    <button id="audio-control" onclick="toggleAudio()" aria-label="Putar atau jeda musik" class="fixed bottom-36 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-gold-500/30 bg-stone-900/80 text-gold-300 shadow-2xl backdrop-blur transition hover:scale-110 md:bottom-20 md:right-6">
         <svg id="audio-icon-play" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         <svg id="audio-icon-pause" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
     </button>
@@ -20,7 +20,7 @@
     @include('wedding.partials.cover')
 
     <!-- Main Content -->
-    <main id="main-content" class="hidden pb-20 md:pb-0">
+    <main id="main-content" class="hidden pb-36 md:pb-16">
         @include('wedding.partials.hero')
         @include('wedding.partials.quote')
         @include('wedding.partials.couple')
@@ -37,7 +37,7 @@
             @endunless
         </footer>
 
-        <nav aria-label="Navigasi undangan" class="fixed inset-x-0 bottom-0 z-30 border-t border-amber-200/20 bg-stone-900/95 px-2 pb-[env(safe-area-inset-bottom)] text-white shadow-[0_-8px_24px_rgba(0,0,0,0.18)] backdrop-blur-md md:hidden">
+        <nav aria-label="Navigasi undangan" class="fixed inset-x-0 bottom-0 z-30 border-t border-amber-200/20 bg-stone-900/95 px-2 pb-[calc(env(safe-area-inset-bottom)+3.5rem)] text-white shadow-[0_-8px_24px_rgba(0,0,0,0.18)] backdrop-blur-md md:hidden">
             <div class="mx-auto grid max-w-lg grid-cols-5">
                 <a class="flex min-h-16 flex-col items-center justify-center gap-1 px-1 text-[10px] font-medium text-amber-100 transition hover:text-white" href="#hero">
                     <svg aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1V10Z"/></svg>
